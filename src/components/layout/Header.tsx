@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Search } from 'lucide-react';
 import { SearchInput, MovieIcon } from '../common';
 
 export const Header = () => {
@@ -18,7 +18,17 @@ export const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isActive = (path: string) => location.pathname === path;
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   const navLinks = [
     { path: '/', label: 'Home' },
@@ -31,86 +41,107 @@ export const Header = () => {
     }
   };
 
-  return (
-    <header className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
-      isScrolled
-        ? 'backdrop-blur-[20px] bg-[rgba(10,13,18,0.6)] border-b border-[#252b37]'
-        : 'bg-transparent'
-    }`}>
-      <div className="h-[90px] w-full px-[140px] flex items-center justify-between">
-        {/* Logo Section - Left side with Navigation */}
-        <div className="flex gap-20 items-center">
-          {/* Logo */}
-          <Link to="/" className="flex gap-2 items-center">
-            <MovieIcon />
-            <span className="font-semibold text-white text-2xl tracking-tight">Movie</span>
-          </Link>
+  const handleMobileSearchClick = () => {
+    navigate('/search');
+  };
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex gap-12">
+  return (
+    <>
+      <header className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
+        isScrolled
+          ? 'backdrop-blur-[20px] bg-[rgba(10,13,18,0.6)]'
+          : 'bg-transparent'
+      }`}>
+        <div className="h-[70px] sm:h-[80px] lg:h-[90px] w-full px-4 sm:px-6 md:px-12 lg:px-20 xl:px-[140px] flex items-center justify-between">
+          {/* Logo Section - Left side with Navigation */}
+          <div className="flex gap-6 md:gap-12 lg:gap-20 items-center">
+            {/* Logo */}
+            <Link to="/" className="flex gap-2 items-center">
+              <MovieIcon />
+              <span className="font-semibold text-white text-xl md:text-2xl tracking-tight">Movie</span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex gap-6 lg:gap-12">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className="text-sm lg:text-text-md font-normal text-white hover:text-neutral-400 transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          {/* Search Input - Right side (Desktop only) */}
+          <div className="hidden md:block">
+            <SearchInput
+              onSearch={handleSearch}
+              placeholder="Search Movie"
+            />
+          </div>
+
+          {/* Mobile Icons - Search and Menu */}
+          <div className="flex items-center gap-4 md:hidden">
+            {/* Mobile Search Icon */}
+            <button
+              onClick={handleMobileSearchClick}
+              aria-label="Search"
+              className="text-white"
+            >
+              <Search className="h-6 w-6" />
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Toggle menu"
+              className="text-white"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Menu Overlay - Full Screen */}
+      {isOpen && (
+        <div className="fixed inset-0 z-[60] bg-black md:hidden">
+          {/* Menu Header */}
+          <div className="h-[70px] sm:h-[80px] px-4 sm:px-6 flex items-center justify-between">
+            {/* Logo */}
+            <Link to="/" className="flex gap-2 items-center" onClick={() => setIsOpen(false)}>
+              <MovieIcon />
+              <span className="font-semibold text-white text-xl tracking-tight">Movie</span>
+            </Link>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              aria-label="Close menu"
+              className="text-white"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          {/* Menu Items */}
+          <nav className="px-4 sm:px-6 pt-4">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
-                className="text-text-md font-regular text-white hover:text-neutral-400 transition-colors"
+                className="block py-4 text-base font-normal text-white"
+                onClick={() => setIsOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
           </nav>
         </div>
-
-        {/* Search Input - Right side (Desktop only) */}
-        <div className="hidden md:block">
-          <SearchInput
-            onSearch={handleSearch}
-            placeholder="Search Movie"
-          />
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-        >
-          {isOpen ? (
-            <X className="h-6 w-6 text-white" />
-          ) : (
-            <Menu className="h-6 w-6 text-white" />
-          )}
-        </button>
-      </div>
-
-      {/* Mobile Navigation */}
-      {isOpen && (
-        <nav className="border-t border-gray-800/50 py-6 md:hidden bg-background-dark/50 absolute top-[90px] w-full left-0 right-0">
-          <div className="space-y-4">
-            {/* Search for mobile */}
-            <div className="px-10 pb-4">
-              <SearchInput
-                onSearch={handleSearch}
-                placeholder="Search Movie"
-              />
-            </div>
-
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`block px-10 py-3 text-base font-normal transition-colors ${
-                  isActive(link.path)
-                    ? 'text-white bg-gray-800/50 font-medium'
-                    : 'text-gray-300 hover:text-white hover:bg-gray-800/30'
-                }`}
-                onClick={() => setIsOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </nav>
       )}
-    </header>
+    </>
   );
 };

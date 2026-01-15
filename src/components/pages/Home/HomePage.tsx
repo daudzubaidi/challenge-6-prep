@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { usePopularMovies, getTrendingMovies, getPopularMovies } from '../../../hooks/useMovies';
 import { Container, Header, Footer } from '../../layout';
-import { Loading, MovieCardSkeletonGrid, Toast } from '../../common';
+import { Loading, MovieCardSkeletonGrid } from '../../common';
 import { HeroSection } from './HeroSection';
 import { MoviesGrid } from './MoviesGrid';
 import { MoviesCarousel } from './MoviesCarousel';
@@ -10,11 +10,6 @@ import type { Movie } from '../../../types/movie';
 export const HomePage = () => {
   const { data: popularData, isLoading: isLoadingPopular } = usePopularMovies(1);
   const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
-  const [favorites, setFavorites] = useState<number[]>(() => {
-    const saved = localStorage.getItem('favorites');
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [toastVisible, setToastVisible] = useState(false);
   const [newReleaseMovies, setNewReleaseMovies] = useState<Movie[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,24 +26,6 @@ export const HomePage = () => {
       setNewReleaseMovies(popularData.results.slice(1, 16));
     }
   }, [popularData]);
-
-  useEffect(() => {
-    localStorage.setItem('favorites', JSON.stringify(favorites));
-  }, [favorites]);
-
-  const handleFavoriteToggle = (movie: Movie) => {
-    const isAlreadyFavorite = favorites.includes(movie.id);
-    setFavorites((prev) =>
-      isAlreadyFavorite
-        ? prev.filter((id) => id !== movie.id)
-        : [...prev, movie.id]
-    );
-
-    // Show toast only when adding to favorites
-    if (!isAlreadyFavorite) {
-      setToastVisible(true);
-    }
-  };
 
   const handleLoadMore = async () => {
     setIsLoadingMore(true);
@@ -83,22 +60,17 @@ export const HomePage = () => {
   return (
     <div className="min-h-screen bg-background-dark">
       <Header />
-      <Toast
-        message="Success Add to Favorites"
-        isVisible={toastVisible}
-        onClose={() => setToastVisible(false)}
-      />
 
       <main className="relative">
         {/* Hero Section - Full width */}
         {heroMovie && <HeroSection movie={heroMovie} />}
 
-        {/* Add spacing for hero section */}
-        <div className="h-[810px]" />
+        {/* Add responsive spacing for hero section */}
+        <div className="h-[500px] sm:h-[600px] md:h-[700px] lg:h-[810px]" />
 
         <Container>
           {trendingMovies.length > 0 ? (
-            <div>
+            <div className="py-8 sm:py-10 lg:py-12">
               <MoviesCarousel
                 title="Trending Now"
                 movies={trendingMovies.slice(0, 10)}
@@ -111,12 +83,10 @@ export const HomePage = () => {
 
         <Container>
           {newReleaseMovies.length > 0 ? (
-            <div className="py-[80px]">
+            <div className="py-8 sm:py-12 md:py-16 lg:py-[80px]">
               <MoviesGrid
                 title="New Release"
                 movies={newReleaseMovies}
-                onFavoriteToggle={handleFavoriteToggle}
-                favorites={favorites}
                 onLoadMore={handleLoadMore}
                 isLoadingMore={isLoadingMore}
                 hasMore={hasMoreMovies}

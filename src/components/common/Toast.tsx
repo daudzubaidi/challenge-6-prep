@@ -20,28 +20,9 @@ export const Toast = ({ message, isVisible, onClose, duration = 3000 }: ToastPro
 
   return (
     <div className="fixed top-[114px] left-1/2 -translate-x-1/2 z-[100]">
-      <div
-        style={{
-          backdropFilter: 'blur(20px)',
-          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          minHeight: '56px',
-          borderRadius: '12px',
-          paddingLeft: '32px',
-          paddingRight: '32px',
-          minWidth: '360px',
-        }}
-        className="flex items-center justify-center gap-[16px]"
-      >
+      <div className="flex items-center justify-center gap-[16px] backdrop-blur-[20px] bg-[rgba(0,0,0,0.6)] min-h-[56px] rounded-[12px] px-[32px] min-w-[360px]">
         <Check className="w-[24px] h-[24px] text-white flex-shrink-0" />
-        <p
-          style={{
-            fontSize: '16px',
-            fontWeight: 600,
-            lineHeight: '30px',
-            color: 'white',
-            textAlign: 'center',
-          }}
-        >
+        <p className="text-[16px] leading-[30px] font-semibold text-white text-center">
           {message}
         </p>
       </div>
