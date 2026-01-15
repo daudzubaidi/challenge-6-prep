@@ -59,6 +59,16 @@ export const getTrendingMovies = async (page = 1) => {
   return response.data;
 };
 
+export const getPopularMovies = async (page = 1) => {
+  const response = await api.get<MoviesResponse>('/movie/popular', {
+    params: {
+      page,
+      api_key: import.meta.env.VITE_API_KEY,
+    },
+  });
+  return response.data;
+};
+
 export const getImageUrl = (path: string | null) => {
   if (!path) return '/placeholder-movie.png';
   return `${TMDB_IMAGE_BASE}${path}`;

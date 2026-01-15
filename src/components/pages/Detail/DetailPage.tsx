@@ -1,16 +1,17 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMovieDetails, getImageUrl } from '../../../hooks/useMovies';
 import { Header, Footer, Container } from '../../layout';
-import { Loading, EmptyState } from '../../common';
-import { Heart, ArrowLeft, Play, Calendar, Star, Film, Smile } from 'lucide-react';
+import { Loading, EmptyState, Toast } from '../../common';
+import { Heart, ArrowLeft, Play, Calendar, Star } from 'lucide-react';
+import { AgeLimitIcon, GenreIcon } from '../../common';
 import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
 
 export const DetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: movie, isLoading } = useMovieDetails(Number(id));
   const [isFavorite, setIsFavorite] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
 
   const [favorites, setFavorites] = useState<number[]>(() => {
     const saved = localStorage.getItem('favorites');
@@ -26,17 +27,19 @@ export const DetailPage = () => {
   const handleFavoriteToggle = () => {
     if (!movie) return;
 
-    const newFavorites = isFavorite
+    const isAlreadyFavorite = favorites.includes(movie.id);
+    const newFavorites = isAlreadyFavorite
       ? favorites.filter((id) => id !== movie.id)
       : [...favorites, movie.id];
 
     setFavorites(newFavorites);
     localStorage.setItem('favorites', JSON.stringify(newFavorites));
-    setIsFavorite(!isFavorite);
+    setIsFavorite(!isAlreadyFavorite);
 
-    toast.success(
-      isFavorite ? 'Removed from favorites' : 'Added to favorites'
-    );
+    // Show toast only when adding to favorites
+    if (!isAlreadyFavorite) {
+      setToastVisible(true);
+    }
   };
 
   if (isLoading) return <Loading />;
@@ -62,10 +65,15 @@ export const DetailPage = () => {
   return (
     <div className="min-h-screen bg-background-dark">
       <Header />
+      <Toast
+        message="Success Add to Favorites"
+        isVisible={toastVisible}
+        onClose={() => setToastVisible(false)}
+      />
 
       <main>
         {/* Hero Section with Backdrop */}
-        <div className="relative h-[810px] w-full overflow-hidden">
+        <div className="relative h-[500px] w-full overflow-hidden">
           <img
             src={getImageUrl(movie.backdrop_path)}
             alt={movie.title}
@@ -82,6 +90,7 @@ export const DetailPage = () => {
           </button>
         </div>
 
+        {/* Content Section - Overlaps backdrop */}
         <Container className="relative -mt-32 z-10">
           <div className="flex gap-8">
             {/* Poster */}
@@ -89,22 +98,22 @@ export const DetailPage = () => {
               <img
                 src={getImageUrl(movie.poster_path)}
                 alt={movie.title}
-                className="h-96 w-64 rounded-2xl object-cover shadow-2xl"
+                className="h-80 w-56 rounded-2xl object-cover shadow-2xl"
               />
             </div>
 
-            {/* Content */}
+            {/* Content - Title, Date, Buttons, Stats */}
             <div className="flex-1">
               {/* Title */}
-              <h1 className="text-display-2xl font-bold text-white mb-6 tracking-[-0.02em]">
+              <h1 style={{ fontSize: '48px', fontWeight: 700, lineHeight: '60px', letterSpacing: '-0.96px' }} className="text-white mb-4">
                 {movie.title}
               </h1>
 
               {/* Release Date */}
               {movie.release_date && (
                 <div className="flex items-center gap-2 mb-6">
-                  <Calendar className="h-6 w-6 text-white" />
-                  <span className="text-white">
+                  <Calendar className="h-5 w-5 text-white" />
+                  <span className="text-white text-sm">
                     {new Date(movie.release_date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -115,13 +124,13 @@ export const DetailPage = () => {
               )}
 
               {/* Action Buttons */}
-              <div className="flex gap-4 mb-8">
+              <div className="flex gap-4 mb-8 items-center">
                 {trailer && (
                   <a
                     href={`https://www.youtube.com/watch?v=${trailer.key}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-full transition-colors flex items-center gap-2"
+                    className="bg-red-600 hover:bg-red-700 text-white font-semibold px-8 rounded-full transition-colors flex items-center gap-2 h-12"
                   >
                     <Play size={24} fill="currentColor" />
                     Watch Trailer
@@ -130,7 +139,7 @@ export const DetailPage = () => {
 
                 <button
                   onClick={handleFavoriteToggle}
-                  className="bg-gray-800/80 hover:bg-gray-700 text-white p-3 rounded-full transition-colors"
+                  className="bg-gray-800/80 hover:bg-gray-700 text-white rounded-full transition-colors flex items-center justify-center h-12 w-12 flex-shrink-0"
                 >
                   <Heart
                     size={24}
@@ -139,33 +148,39 @@ export const DetailPage = () => {
                 </button>
               </div>
 
-              {/* Stats Cards */}
-              <div className="flex gap-6 mb-8">
-                {/* Rating */}
-                <div className="bg-black border border-gray-800/50 rounded-2xl p-5 flex flex-col items-center justify-center min-w-max">
-                  <Star className="h-11 w-11 text-yellow-400 fill-yellow-400 mb-2" />
-                  <span className="text-sm text-gray-400 mb-1">Rating</span>
-                  <span className="text-xl font-semibold text-white">
-                    {movie.vote_average.toFixed(1)}/10
-                  </span>
+              {/* Stat Cards - Horizontal Row */}
+              <div className="flex gap-5 mt-12">
+                {/* Rating Card */}
+                <div style={{ width: '276px', height: '146px' }} className="bg-black border border-[#252B37] rounded-[16px] p-5 flex flex-col items-center justify-center gap-2">
+                  <Star size={32} className="text-[#E4A802] fill-[#E4A802]" />
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span style={{ fontSize: '16px', fontWeight: 400 }} className="text-[#D5D7DA]">Rating</span>
+                    <span style={{ fontSize: '20px', fontWeight: 600 }} className="text-[#FDFDFD]">
+                      {movie.vote_average.toFixed(1)}/10
+                    </span>
+                  </div>
                 </div>
 
-                {/* Genre */}
-                <div className="bg-black border border-gray-800/50 rounded-2xl p-5 flex flex-col items-center justify-center min-w-max">
-                  <Film className="h-11 w-11 text-white mb-2" />
-                  <span className="text-sm text-gray-400 mb-1">Genre</span>
-                  <span className="text-xl font-semibold text-white">
-                    {primaryGenre}
-                  </span>
+                {/* Genre Card */}
+                <div style={{ width: '276px', height: '146px' }} className="bg-black border border-[#252B37] rounded-[16px] p-5 flex flex-col items-center justify-center gap-2">
+                  <GenreIcon />
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span style={{ fontSize: '16px', fontWeight: 400 }} className="text-[#D5D7DA]">Genre</span>
+                    <span style={{ fontSize: '20px', fontWeight: 600 }} className="text-[#FDFDFD]">
+                      {primaryGenre}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Age Limit */}
-                <div className="bg-black border border-gray-800/50 rounded-2xl p-5 flex flex-col items-center justify-center min-w-max">
-                  <Smile className="h-11 w-11 text-white mb-2" />
-                  <span className="text-sm text-gray-400 mb-1">Age Limit</span>
-                  <span className="text-xl font-semibold text-white">
-                    13
-                  </span>
+                {/* Age Limit Card */}
+                <div style={{ width: '276px', height: '146px' }} className="bg-black border border-[#252B37] rounded-[16px] p-5 flex flex-col items-center justify-center gap-2">
+                  <AgeLimitIcon />
+                  <div className="flex flex-col items-center gap-0.5">
+                    <span style={{ fontSize: '16px', fontWeight: 400 }} className="text-[#D5D7DA]">Age Limit</span>
+                    <span style={{ fontSize: '20px', fontWeight: 600 }} className="text-[#FDFDFD]">
+                      13
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
-import { Film } from 'lucide-react';
+import { MovieIcon } from '../common';
 
 export const Footer = () => {
   return (
-    <footer className="border-t border-neutral-800 bg-base-black h-footer">
+    <footer className="border-t border-neutral-800 bg-base-black h-footer py-2">
       <div className="w-full h-full px-35 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <Film className="h-10 w-10 text-neutral-25" />
-          <span className="font-semibold text-neutral-25 text-2xl">Movie</span>
+          <MovieIcon />
+          <span className="font-semibold text-white text-2xl">Movie</span>
         </Link>
 
         {/* Copyright */}

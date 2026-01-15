@@ -24,7 +24,7 @@ export const HeroSection = ({ movie }: HeroSectionProps) => {
       <div className="absolute flex flex-col gap-12 items-start left-[140px] top-[298px] w-[635px]">
         {/* Text Content */}
         <div className="flex flex-col gap-4 w-full">
-          <h1 style={{ fontSize: '56px', fontWeight: 700, lineHeight: '72px', letterSpacing: '-0.96px' }} className="text-neutral-25">
+          <h1 style={{ fontSize: '48px', fontWeight: 700, lineHeight: '60px', letterSpacing: '-0.96px' }} className="text-neutral-25">
             {movie.title}
           </h1>
           <p className="text-text-md font-regular text-neutral-400 leading-[30px] line-clamp-3">

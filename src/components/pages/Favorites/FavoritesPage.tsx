@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Header, Footer, Container } from '../../layout';
-import { EmptyState, MovieCardSkeletonGrid } from '../../common';
+import { MovieCardSkeletonGrid, FilmClapperIcon } from '../../common';
 import { Heart, Play, Star } from 'lucide-react';
 import { getImageUrl } from '../../../hooks/useMovies';
 import { Link } from 'react-router-dom';
@@ -65,23 +65,54 @@ export const FavoritesPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background-dark">
+    <div className="flex flex-col min-h-screen bg-background-dark">
       <Header />
 
-      <main>
-        <Container>
-          <div className="flex flex-col gap-12">
-            <h1 className="text-display-lg font-bold text-neutral-25 leading-[48px] tracking-[-0.72px]">Favorites</h1>
+      <main className="flex-1 pt-[90px] relative">
+        {/* Favorites Title */}
+        <div style={{ position: 'absolute', top: '154px', left: '140px' }}>
+          <h1 style={{ fontSize: '36px', fontWeight: 700, lineHeight: '48px', letterSpacing: '-0.02em' }} className="text-neutral-25">
+            Favorites
+          </h1>
+        </div>
 
-            {movies.length === 0 ? (
-              <EmptyState
-                icon="❤️"
-                title="No favorites yet"
-                description="Start adding movies to your favorites list to see them here"
-                actionLabel="Explore Movies"
-                onAction={() => (window.location.href = '/')}
-              />
-            ) : (
+        {movies.length === 0 ? (
+          <div style={{ position: 'absolute', width: '300px', left: 'calc(50% - 150px)', top: '306px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', width: '246px' }}>
+              <FilmClapperIcon />
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', width: '246px' }}>
+                <h2 style={{ fontSize: '16px', fontWeight: 600, lineHeight: '30px', color: '#FFFFFF', textAlign: 'center', width: '246px' }}>
+                  Data Empty
+                </h2>
+                <p style={{ fontSize: '14px', fontWeight: 400, lineHeight: '28px', color: '#A4A7AE', textAlign: 'center', width: '246px' }}>
+                  You don't have a favorite movie yet
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => (window.location.href = '/')}
+              style={{
+                width: '300px',
+                height: '52px',
+                backgroundColor: '#961200',
+                borderRadius: '9999px',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+              }}
+              className="hover:bg-[#a81500] transition-colors"
+            >
+              <span style={{ fontSize: '16px', fontWeight: 600, lineHeight: '30px', color: '#FDFDFD' }}>
+                Explore Movie
+              </span>
+            </button>
+          </div>
+        ) : (
+          <Container>
+            <div className="flex flex-col gap-12 py-12 pt-24">
               <div className="flex flex-col gap-0">
                 {movies.map((movie, index) => (
                   <div key={movie.id}>
@@ -147,9 +178,9 @@ export const FavoritesPage = () => {
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-        </Container>
+            </div>
+          </Container>
+        )}
       </main>
 
       <Footer />

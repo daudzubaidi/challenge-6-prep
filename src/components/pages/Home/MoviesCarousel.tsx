@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { ChevronRight, Star } from 'lucide-react';
 import { getImageUrl } from '../../../hooks/useMovies';
 import type { Movie } from '../../../types/movie';
@@ -16,6 +16,23 @@ export const MoviesCarousel = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
+  const checkScroll = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    setCanScrollRight(
+      container.scrollLeft < container.scrollWidth - container.clientWidth
+    );
+  }, []);
+
+  useEffect(() => {
+    // Delay untuk memastikan DOM sudah render sepenuhnya
+    const timer = setTimeout(() => {
+      checkScroll();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [movies, checkScroll]);
+
   const scroll = (direction: 'left' | 'right') => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -27,21 +44,12 @@ export const MoviesCarousel = ({
       container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
 
-    setTimeout(checkScroll, 300);
-  };
-
-  const checkScroll = () => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    setCanScrollRight(
-      container.scrollLeft < container.scrollWidth - container.clientWidth
-    );
+    setTimeout(() => checkScroll(), 300);
   };
 
   return (
     <section className="flex flex-col gap-10">
-      <h2 className="text-display-lg font-bold text-neutral-25 leading-[48px] tracking-[-0.72px]">{title}</h2>
+      <h2 style={{ fontSize: '36px', fontWeight: 700, lineHeight: '48px', letterSpacing: '-0.02em' }} className="text-neutral-25">{title}</h2>
 
       <div className="relative">
         {/* Scroll Container */}

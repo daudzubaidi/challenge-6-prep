@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Film } from 'lucide-react';
-import { SearchInput } from '../common';
+import { Menu, X } from 'lucide-react';
+import { SearchInput, MovieIcon } from '../common';
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +42,7 @@ export const Header = () => {
         <div className="flex gap-20 items-center">
           {/* Logo */}
           <Link to="/" className="flex gap-2 items-center">
-            <Film className="h-10 w-10 text-white" />
+            <MovieIcon />
             <span className="font-semibold text-white text-2xl tracking-tight">Movie</span>
           </Link>
 
