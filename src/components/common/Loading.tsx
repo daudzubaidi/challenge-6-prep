@@ -2,7 +2,7 @@ export const Loading = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="space-y-4">
-        <div className="h-12 w-12 rounded-full border-4 border-gray-700 border-t-red-600 animate-spin"></div>
+        <div className="h-12 w-12 rounded-full border-4 border-gray-700 border-t-primary animate-spin"></div>
         <p className="text-center text-gray-400">Loading...</p>
       </div>
     </div>

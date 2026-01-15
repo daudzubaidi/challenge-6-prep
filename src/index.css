@@ -1,5 +1,55 @@
 @import 'tailwindcss';
 
+/* Tailwind v4 Custom Theme - ACTUAL Figma Design System Colors */
+@theme {
+  /* Primary Brand Colors (Very Dark Red/Burgundy) - from Figma Design System Movie Explorer */
+  --color-primary-light: #8B1818;
+  --color-primary: #7f1d1d;  /* Main brand color - very dark burgundy for buttons */
+  --color-primary-dark: #6B1212;
+
+  /* Secondary Brand Colors (Teal) - from Figma Design System */
+  --color-secondary: #4ecdc4;
+  --color-secondary-dark: #45b7aa;
+  --color-secondary-light: #6ee7dd;
+
+  /* Gray Scale (Neutral) - Dark theme for Movie Explorer */
+  --color-gray-25: #ffffff;
+  --color-gray-50: #f5f5f5;
+  --color-gray-100: #eeeeee;
+  --color-gray-200: #e0e0e0;
+  --color-gray-300: #d0d0d0;
+  --color-gray-400: #b0b0b0;  /* Light gray for secondary text */
+  --color-gray-500: #888888;
+  --color-gray-600: #666666;
+  --color-gray-700: #444444;
+  --color-gray-800: #1a1a1a;  /* Dark gray for cards */
+  --color-gray-900: #000000;  /* Black */
+  --color-gray-950: #000000;
+
+  /* Base Colors - from Figma */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  /* Semantic color mappings - Dark theme */
+  --color-background-dark: #000000;    /* Pure black per Figma */
+  --color-background-darker: #1a1a1a;  /* Card backgrounds */
+  --color-text-primary: #ffffff;       /* White text */
+  --color-text-secondary: #b0b0b0;     /* Light gray text */
+
+  /* Typography from Figma */
+  --font-sans: 'Poppins', system-ui, -apple-system, sans-serif;
+
+  /* Container Max Width */
+  --breakpoint-lg: 1160px;
+
+  /* Component Heights */
+  --spacing-header-desktop: 90px;
+  --spacing-header-mobile: 64px;
+  --spacing-footer: 120px;
+  --spacing-hero-desktop: 810px;
+  --spacing-hero-mobile: 392px;
+}
+
 @layer base {
   * {
     @apply scroll-smooth;
@@ -10,8 +60,10 @@
   }
 
   body {
-    @apply bg-black text-white;
-    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    background-color: var(--color-background-dark);
+    color: var(--color-text-primary);
+    font-family: "Poppins", system-ui, -apple-system, sans-serif;
+    font-weight: 400;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -19,14 +71,24 @@
   }
 
   a {
-    @apply text-red-600 hover:text-red-500 transition-colors;
+    color: var(--color-primary);
     text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  a:hover {
+    opacity: 0.8;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors;
+    @apply inline-flex items-center justify-center px-6 py-3 text-white font-semibold rounded-lg transition-colors;
+    background-color: var(--color-primary);
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
   }
 
   .btn-secondary {
@@ -35,5 +97,41 @@
 
   .card {
     @apply rounded-lg bg-gray-900 overflow-hidden;
+  }
+
+  /* Utility classes for Figma colors */
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+
+  .bg-primary-light {
+    background-color: var(--color-primary-100);
+  }
+
+  .text-primary {
+    color: var(--color-primary);
+  }
+
+  .border-primary {
+    border-color: var(--color-primary);
+  }
+
+  .border-t-primary {
+    border-top-color: var(--color-primary);
+  }
+
+  .ring-primary {
+    --tw-ring-color: var(--color-primary);
+  }
+
+  .bg-background-dark {
+    background-color: var(--color-background-dark);
+  }
+
+  /* Container with Figma max-width */
+  .container-figma {
+    max-width: var(--breakpoint-lg);
+    margin-left: auto;
+    margin-right: auto;
   }
 }

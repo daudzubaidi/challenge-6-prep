@@ -1,7 +1,7 @@
 import { getImageUrl } from '../../../hooks/useMovies';
 import type { Movie } from '../../../types/movie';
 import { Link } from 'react-router-dom';
-import { Button } from '../../common';
+import { Play } from 'lucide-react';
 
 interface HeroSectionProps {
   movie: Movie;
@@ -9,7 +9,7 @@ interface HeroSectionProps {
 
 export const HeroSection = ({ movie }: HeroSectionProps) => {
   return (
-    <div className="relative h-screen w-full overflow-hidden rounded-lg md:rounded-2xl">
+    <div className="absolute h-[810px] left-0 top-0 w-full">
       {/* Background Image */}
       <img
         src={getImageUrl(movie.backdrop_path)}
@@ -17,20 +17,35 @@ export const HeroSection = ({ movie }: HeroSectionProps) => {
         className="absolute inset-0 h-full w-full object-cover"
       />
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent" />
+      {/* Gradient Overlay - from transparent at top to black at bottom */}
+      <div className="absolute bg-gradient-to-b from-transparent to-black h-[810px] left-0 top-0 w-full" />
 
-      {/* Content */}
-      <div className="relative flex h-full flex-col items-start justify-center px-6 md:px-12 lg:px-20">
-        <h1 className="max-w-2xl text-5xl md:text-6xl font-bold text-white mb-4">
-          {movie.title}
-        </h1>
-        <p className="max-w-xl text-lg text-gray-300 mb-8 line-clamp-3">
-          {movie.overview}
-        </p>
+      {/* Content Container */}
+      <div className="absolute flex flex-col gap-12 items-start left-[140px] top-[298px] w-[635px]">
+        {/* Text Content */}
+        <div className="flex flex-col gap-4 w-full">
+          <h1 style={{ fontSize: '56px', fontWeight: 700, lineHeight: '72px', letterSpacing: '-0.96px' }} className="text-neutral-25">
+            {movie.title}
+          </h1>
+          <p className="text-text-md font-regular text-neutral-400 leading-[30px] line-clamp-3">
+            {movie.overview}
+          </p>
+        </div>
+
+        {/* Buttons */}
         <div className="flex gap-4">
+          {/* Primary Button - Watch Trailer */}
           <Link to={`/movie/${movie.id}`}>
-            <Button>View Details</Button>
+            <button className="bg-[#961200] text-[#fdfdfd] h-[52px] w-[230px] rounded-full flex items-center justify-center gap-2 p-[8px] font-semibold text-text-md leading-[30px] hover:bg-[#a81500] transition-colors">
+              Watch Trailer
+              <Play className="h-6 w-6 flex-shrink-0" fill="currentColor" />
+            </button>
+          </Link>
+          {/* Secondary Button - See Detail */}
+          <Link to={`/movie/${movie.id}`}>
+            <button className="backdrop-blur-[20px] bg-[rgba(10,13,18,0.6)] border border-[#181d27] text-[#fdfdfd] h-[52px] w-[230px] rounded-full flex items-center justify-center gap-2 p-[8px] font-semibold text-text-md leading-[30px] hover:bg-[rgba(10,13,18,0.7)] transition-colors">
+              See Detail
+            </button>
           </Link>
         </div>
       </div>

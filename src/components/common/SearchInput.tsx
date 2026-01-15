@@ -40,20 +40,20 @@ export const SearchInput = ({
   };
 
   return (
-    <div className="relative w-full">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+    <div className="relative w-[243px]">
+      <div className="relative h-[56px] backdrop-blur-[20px] bg-[rgba(10,13,18,0.6)] border border-[#252b37] rounded-[16px] flex items-center px-4 gap-2">
+        <Search className="h-6 w-6 text-neutral-600 flex-shrink-0" />
         <input
           type="text"
           value={value}
           onChange={handleChange}
           placeholder={placeholder}
-          className="w-full bg-gray-800 pl-10 pr-10 py-2 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600"
+          className="flex-1 bg-transparent border-0 py-3 text-neutral-25 placeholder-neutral-600 focus:outline-none transition-all text-text-md"
         />
         {value && (
           <button
             onClick={handleClear}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+            className="text-neutral-600 hover:text-neutral-25 transition-colors flex-shrink-0"
             aria-label="Clear search"
           >
             <X className="h-5 w-5" />

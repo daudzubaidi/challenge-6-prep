@@ -55,4 +55,15 @@ export interface MovieDetailsResponse extends Movie {
   videos?: {
     results: Video[];
   };
+  release_dates?: {
+    results: Array<{
+      iso_3166_1: string;
+      release_dates: Array<{
+        certification: string;
+        release_date: string;
+        type: number;
+        note: string;
+      }>;
+    }>;
+  };
 }

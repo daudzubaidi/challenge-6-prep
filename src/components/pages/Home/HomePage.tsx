@@ -4,6 +4,7 @@ import { Container, Header, Footer } from '../../layout';
 import { Loading, MovieCardSkeletonGrid } from '../../common';
 import { HeroSection } from './HeroSection';
 import { MoviesGrid } from './MoviesGrid';
+import { MoviesCarousel } from './MoviesCarousel';
 import type { Movie } from '../../../types/movie';
 
 export const HomePage = () => {
@@ -37,38 +38,42 @@ export const HomePage = () => {
   }
 
   const heroMovie = popularData?.results[0];
-  const featuredMovies = popularData?.results.slice(1, 9) || [];
+  const newReleaseMovies = popularData?.results.slice(1, 11) || [];
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background-dark">
       <Header />
 
-      <main>
-        <Container className="py-8">
-          {heroMovie && <HeroSection movie={heroMovie} />}
-        </Container>
+      <main className="relative">
+        {/* Hero Section - Full width */}
+        {heroMovie && <HeroSection movie={heroMovie} />}
 
-        <Container className="py-12">
-          {featuredMovies.length > 0 ? (
-            <MoviesGrid
-              title="Featured Movies"
-              movies={featuredMovies}
-              onFavoriteToggle={handleFavoriteToggle}
-              favorites={favorites}
-            />
+        {/* Add spacing for hero section */}
+        <div className="h-[810px]" />
+
+        <Container>
+          {trendingMovies.length > 0 ? (
+            <div className="py-[80px]">
+              <MoviesCarousel
+                title="Trending Now"
+                movies={trendingMovies.slice(0, 5)}
+              />
+            </div>
           ) : (
             <MovieCardSkeletonGrid />
           )}
         </Container>
 
-        <Container className="py-12">
-          {trendingMovies.length > 0 ? (
-            <MoviesGrid
-              title="Trending Now"
-              movies={trendingMovies}
-              onFavoriteToggle={handleFavoriteToggle}
-              favorites={favorites}
-            />
+        <Container>
+          {newReleaseMovies.length > 0 ? (
+            <div className="py-[80px]">
+              <MoviesGrid
+                title="New Release"
+                movies={newReleaseMovies}
+                onFavoriteToggle={handleFavoriteToggle}
+                favorites={favorites}
+              />
+            </div>
           ) : (
             <MovieCardSkeletonGrid />
           )}

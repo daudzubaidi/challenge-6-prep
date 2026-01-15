@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Heart } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { getImageUrl } from '../../hooks/useMovies';
 import type { Movie } from '../../types/movie';
 import { Link } from 'react-router-dom';
@@ -10,53 +9,36 @@ interface MovieCardProps {
   isFavorite?: boolean;
 }
 
-export const MovieCard = ({ movie, onFavoriteToggle, isFavorite = false }: MovieCardProps) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [localFavorite, setLocalFavorite] = useState(isFavorite);
-
-  const handleFavoriteClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setLocalFavorite(!localFavorite);
-    if (onFavoriteToggle) {
-      onFavoriteToggle(movie);
-    }
-  };
+export const MovieCard = ({ movie }: MovieCardProps) => {
 
   return (
     <Link
       to={`/movie/${movie.id}`}
-      className="group relative overflow-hidden rounded-lg bg-gray-900 transition-transform duration-300 hover:scale-105"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="group relative flex flex-col gap-3 bg-base-black transition-transform duration-300 hover:scale-105"
     >
-      <img
-        src={getImageUrl(movie.poster_path)}
-        alt={movie.title}
-        className="h-full w-full object-cover"
-      />
+      {/* Movie Poster Image */}
+      <div className="h-[321px] w-[216px] rounded-[12px] overflow-hidden">
+        <img
+          src={getImageUrl(movie.poster_path)}
+          alt={movie.title}
+          className="h-full w-full object-cover"
+        />
+      </div>
 
-      {/* Overlay on Hover */}
-      {isHovered && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black bg-opacity-80 p-4">
-          <h3 className="line-clamp-2 text-center text-lg font-semibold text-white">
-            {movie.title}
-          </h3>
-          <p className="text-sm text-gray-300">
-            Rating: {movie.vote_average.toFixed(1)}/10
+      {/* Movie Info */}
+      <div className="flex flex-col gap-[2px]">
+        <h3 className="text-text-lg font-semibold text-neutral-25 line-clamp-2">
+          {movie.title}
+        </h3>
+
+        {/* Rating with Star */}
+        <div className="flex items-center gap-[4px]">
+          <Star className="h-[16.667px] w-[16.667px] text-yellow-500 fill-yellow-500 flex-shrink-0" />
+          <p className="text-text-md font-regular text-neutral-400">
+            {movie.vote_average.toFixed(1)}/10
           </p>
-          <button
-            onClick={handleFavoriteClick}
-            className="rounded-full bg-red-600 p-2 hover:bg-red-700 transition-colors"
-            aria-label={localFavorite ? 'Remove from favorites' : 'Add to favorites'}
-          >
-            <Heart
-              className="h-6 w-6 text-white"
-              fill={localFavorite ? 'currentColor' : 'none'}
-            />
-          </button>
         </div>
-      )}
+      </div>
     </Link>
   );
 };

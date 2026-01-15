@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Header, Footer, Container } from '../../layout';
-import { MovieCard, EmptyState, MovieCardSkeletonGrid } from '../../common';
+import { EmptyState, MovieCardSkeletonGrid } from '../../common';
+import { Heart, Play, Star } from 'lucide-react';
+import { getImageUrl } from '../../../hooks/useMovies';
+import { Link } from 'react-router-dom';
 import type { Movie } from '../../../types/movie';
 import { api } from '../../../lib/api';
 
@@ -49,7 +52,7 @@ export const FavoritesPage = () => {
 
   if (isLoading && favoriteIds.length > 0) {
     return (
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen bg-background-dark">
         <Header />
         <Container>
           <div className="py-20">
@@ -62,33 +65,90 @@ export const FavoritesPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background-dark">
       <Header />
 
       <main>
-        <Container className="py-12">
-          <h1 className="mb-8 text-4xl font-bold text-white">My Favorites</h1>
+        <Container>
+          <div className="flex flex-col gap-12">
+            <h1 className="text-display-lg font-bold text-neutral-25 leading-[48px] tracking-[-0.72px]">Favorites</h1>
 
-          {movies.length === 0 ? (
-            <EmptyState
-              icon="❤️"
-              title="No favorites yet"
-              description="Start adding movies to your favorites list to see them here"
-              actionLabel="Explore Movies"
-              onAction={() => (window.location.href = '/')}
-            />
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {movies.map((movie) => (
-                <MovieCard
-                  key={movie.id}
-                  movie={movie}
-                  isFavorite={true}
-                  onFavoriteToggle={handleFavoriteToggle}
-                />
-              ))}
-            </div>
-          )}
+            {movies.length === 0 ? (
+              <EmptyState
+                icon="❤️"
+                title="No favorites yet"
+                description="Start adding movies to your favorites list to see them here"
+                actionLabel="Explore Movies"
+                onAction={() => (window.location.href = '/')}
+              />
+            ) : (
+              <div className="flex flex-col gap-0">
+                {movies.map((movie, index) => (
+                  <div key={movie.id}>
+                    {/* Favorite Item */}
+                    <div className="flex items-start justify-between gap-6 py-12">
+                      {/* Left: Poster + Info */}
+                      <div className="flex gap-6 flex-1">
+                        {/* Poster */}
+                        <div className="h-[270px] w-[182px] rounded-xl overflow-hidden flex-shrink-0">
+                          <img
+                            src={getImageUrl(movie.poster_path)}
+                            alt={movie.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+
+                        {/* Info */}
+                        <div className="flex flex-col gap-6 flex-1">
+                          {/* Title + Rating */}
+                          <div className="flex flex-col gap-3">
+                            <h2 className="text-display-xs font-bold text-neutral-25 leading-[36px]">
+                              {movie.title}
+                            </h2>
+
+                            {/* Rating */}
+                            <div className="flex items-center gap-1">
+                              <Star className="h-6 w-6 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                              <p className="text-text-lg font-medium text-neutral-25">
+                                {movie.vote_average.toFixed(1)}/10
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Description */}
+                          <p className="text-text-md font-regular text-neutral-400 line-clamp-3">
+                            {movie.overview}
+                          </p>
+
+                          {/* Watch Trailer Button */}
+                          <Link to={`/movie/${movie.id}`}>
+                            <button className="bg-[#961200] text-[#fdfdfd] h-[52px] w-[200px] rounded-full flex items-center justify-center gap-2 p-[8px] font-semibold text-text-md leading-[30px] hover:bg-[#a81500] transition-colors">
+                              Watch Trailer
+                              <Play className="h-6 w-6 flex-shrink-0" fill="currentColor" />
+                            </button>
+                          </Link>
+                        </div>
+                      </div>
+
+                      {/* Right: Heart Button */}
+                      <button
+                        onClick={() => handleFavoriteToggle(movie)}
+                        className="backdrop-blur-[20px] bg-[rgba(10,13,18,0.6)] border border-[#181d27] text-[#fdfdfd] h-[56px] w-[56px] rounded-full flex items-center justify-center flex-shrink-0 hover:bg-[rgba(10,13,18,0.7)] transition-colors"
+                        aria-label="Remove from favorites"
+                      >
+                        <Heart className="h-6 w-6 fill-current" />
+                      </button>
+                    </div>
+
+                    {/* Divider */}
+                    {index < movies.length - 1 && (
+                      <div className="border-t border-neutral-800" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </Container>
       </main>
 

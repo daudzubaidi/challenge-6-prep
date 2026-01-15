@@ -15,9 +15,12 @@ export const MoviesGrid = ({
   favorites = [],
 }: MoviesGridProps) => {
   return (
-    <section className="py-12">
-      <h2 className="mb-8 text-3xl md:text-4xl font-bold text-white">{title}</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+    <section className="flex flex-col gap-[40px]">
+      <h2 className="text-display-lg font-bold text-neutral-25 leading-[48px] tracking-[-0.72px]">{title}</h2>
+
+      {/* Grid with 5 columns */}
+      <div className="grid grid-cols-5 gap-[20px]">
+        {/* Movie Cards */}
         {movies.map((movie) => (
           <MovieCard
             key={movie.id}
@@ -26,6 +29,13 @@ export const MoviesGrid = ({
             isFavorite={favorites.includes(movie.id)}
           />
         ))}
+      </div>
+
+      {/* Load More Button - Centered below grid */}
+      <div className="flex justify-center">
+        <button className="backdrop-blur-[20px] bg-[rgba(10,13,18,0.6)] border border-[#181d27] text-neutral-25 h-[52px] px-8 rounded-full font-semibold text-text-md leading-[30px] hover:bg-[rgba(10,13,18,0.7)] transition-colors">
+          Load More
+        </button>
       </div>
     </section>
   );

@@ -16,18 +16,18 @@ export const Button = ({
   children,
   ...props
 }: ButtonProps) => {
-  const baseStyles = 'font-semibold rounded-lg transition-all duration-200 font-poppins';
+  const baseStyles = 'font-semibold rounded-full transition-all duration-200 inline-flex items-center justify-center';
 
   const variantStyles = {
-    primary: 'bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-600',
-    secondary: 'bg-gray-700 text-white hover:bg-gray-800 disabled:bg-gray-600',
-    outline: 'border-2 border-white text-white hover:bg-white/10 disabled:border-gray-600',
+    primary: 'bg-primary text-neutral-25 hover:bg-primary-light disabled:bg-gray-600',
+    secondary: 'backdrop-blur-[20px] bg-neutral-black/60 border border-neutral-900 text-neutral-25 hover:bg-neutral-black/70 disabled:border-gray-600',
+    outline: 'border-2 border-white text-white hover:bg-white/10 disabled:border-gray-600 bg-transparent',
   };
 
   const sizeStyles = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
+    sm: 'px-4 py-2 text-sm',
+    md: 'px-6 py-2.5 text-base',
+    lg: 'px-8 py-3 text-text-md font-semibold',
   };
 
   return (
